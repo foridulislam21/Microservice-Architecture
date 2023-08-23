@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AuctionService.Data;
 using AuctionService.DTOs;
 using AuctionService.Entities;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,12 +21,16 @@ namespace AuctionService.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<List<AuctionDtos>>> GetAllAuctions()
+        public async Task<ActionResult<List<AuctionDtos>>> GetAllAuctions(string date)
         {
-            var auctions = await _dbContext.Auctions
-            .Include(x => x.Item)
-            .ToListAsync();
-            return _mapper.Map<List<AuctionDtos>>(auctions);
+            var query = _dbContext.Auctions.OrderBy(x => x.Item.Make).AsQueryable();
+
+            if (!string.IsNullOrEmpty(date))
+            {
+                query = query.Where(x => x.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
+            }
+
+            return await query.ProjectTo<AuctionDtos>(_mapper.ConfigurationProvider).ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<AuctionDtos>> GetAuctionsById(Guid id)
