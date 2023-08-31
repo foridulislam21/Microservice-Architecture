@@ -1,5 +1,12 @@
 {
-    "recommendations": [
-        "mongodb.mongodb-vscode"
-    ]
+  "recommendations": [
+    "mongodb.mongodb-vscode",
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "adrianwilczynski.add-reference",
+    "ms-dotnettools.csdevkit",
+    "kreativ-software.csharpextensions",
+    "ms-dotnettools.vscodeintellicode-csharp",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "ms-azuretools.vscode-docker"
+  ]
 }
