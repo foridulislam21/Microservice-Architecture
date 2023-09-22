@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Contracts;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,11 +49,12 @@ namespace AuctionService.Controllers
             }
             return _mapper.Map<AuctionDtos>(auctions);
         }
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<CreateAuctionDtos>> CreateAuction(CreateAuctionDtos createAuctionDtos)
         {
             var auction = _mapper.Map<Auction>(createAuctionDtos);
-            auction.Seller = "forid";
+            auction.Seller = User.Identity.Name;
             _dbContext.Auctions.Add(auction);
             var newMapper = _mapper.Map<AuctionDtos>(auction);
 
@@ -70,6 +72,7 @@ namespace AuctionService.Controllers
             var auction = await _dbContext.Auctions.Include(x => x.Item).FirstOrDefaultAsync(x => x.Id == id);
 
             if (auction == null) return NotFound();
+            if (auction.Seller != User.Identity.Name) return Forbid();
 
             auction.Item.Make = updateAuctionDtos.Make ?? auction.Item.Make;
             auction.Item.Model = updateAuctionDtos.Model ?? auction.Item.Model;
@@ -86,11 +89,13 @@ namespace AuctionService.Controllers
 
             return BadRequest("Failed to save");
         }
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAuction(Guid id)
         {
             var auction = await _dbContext.Auctions.FindAsync(id);
             if (auction == null) return NotFound();
+            if (auction.Seller != User.Identity.Name) return Forbid();
 
             _dbContext.Auctions.Remove(auction);
             await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
