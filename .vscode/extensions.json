@@ -7,6 +7,10 @@
     "kreativ-software.csharpextensions",
     "ms-dotnettools.vscodeintellicode-csharp",
     "ms-kubernetes-tools.vscode-kubernetes-tools",
-    "ms-azuretools.vscode-docker"
+    "ms-azuretools.vscode-docker",
+    "dsznajder.es7-react-js-snippets",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag"
   ]
 }
