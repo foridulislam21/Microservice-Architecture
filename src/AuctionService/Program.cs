@@ -13,6 +13,7 @@ builder.Services.AddDbContext<AuctionDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMassTransit(x =>
 {
@@ -23,15 +24,17 @@ builder.Services.AddMassTransit(x =>
         o.UseBusOutbox();
     });
     x.AddConsumersFromNamespaceContaining<AuctionCreatedFaultConsumer>();
+
     x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("auction", false));
-    x.UsingRabbitMq((context, configuration) =>
+
+    x.UsingRabbitMq((context, config) =>
     {
-        configuration.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+        config.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
         {
             host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
             host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
-        configuration.ConfigureEndpoints(context);
+        config.ConfigureEndpoints(context);
     });
 });
 

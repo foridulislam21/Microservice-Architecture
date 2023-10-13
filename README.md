@@ -6,6 +6,8 @@ In this project, I am going to build a microservices-based app using .Net, NextJ
 
 > docker compose up -d
 
+Everytime you need to run this command if you change any specific project.
+
 #### To build docker image use this command
 
-> docker compose build auction-svc
+> docker compose build "Name Of specific project"
