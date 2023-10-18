@@ -15,8 +15,7 @@ export default function CarImage({ imageUrl }: Props) {
       priority
       className={`
       object-cover 
-      group-hover: 
-      opacity-75 
+      group-hover: opacity-75 
       duration-700 
       ease-in-out ${
         isLoading
