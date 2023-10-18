@@ -22,6 +22,7 @@ const initialState: State = {
 export const useParamsStore = createWithEqualityFn<State & Actions>()(
   (set) => ({
     ...initialState,
+
     setParams: (newparams: Partial<State>) => {
       set((state) => {
         if (newparams.pageNumber) {
@@ -31,6 +32,7 @@ export const useParamsStore = createWithEqualityFn<State & Actions>()(
         }
       });
     },
+
     reset: () => set(initialState),
   })
 );
