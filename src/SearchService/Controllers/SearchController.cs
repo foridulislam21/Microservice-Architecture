@@ -33,6 +33,14 @@ namespace SearchService.Controllers
                 && x.AuctionEnd > DateTime.UtcNow),
                 _ => query.Match(x => x.AuctionEnd > DateTime.UtcNow)
             };
+            if (!string.IsNullOrEmpty(serachParams.Seller))
+            {
+                query.Match(x => x.Seller == serachParams.Seller);
+            }
+            if (!string.IsNullOrEmpty(serachParams.Winner))
+            {
+                query.Match(x => x.Winner == serachParams.Winner);
+            }
             query.PageNumber(serachParams.PageNumber);
             query.PageSize(serachParams.PageSize);
             var result = await query.ExecuteAsync();
